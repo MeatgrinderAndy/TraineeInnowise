@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<QueryRows>
+  <item>
+    <room_id>83</room_id>
+    <room_name>Room #83</room_name>
+    <age_difference>116</age_difference>
+  </item>
+  <item>
+    <room_id>381</room_id>
+    <room_name>Room #381</room_name>
+    <age_difference>116</age_difference>
+  </item>
+  <item>
+    <room_id>213</room_id>
+    <room_name>Room #213</room_name>
+    <age_difference>115</age_difference>
+  </item>
+  <item>
+    <room_id>712</room_id>
+    <room_name>Room #712</room_name>
+    <age_difference>115</age_difference>
+  </item>
+  <item>
+    <room_id>905</room_id>
+    <room_name>Room #905</room_name>
+    <age_difference>115</age_difference>
+  </item>
+</QueryRows>

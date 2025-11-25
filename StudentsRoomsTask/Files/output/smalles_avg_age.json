@@ -1,0 +1,27 @@
+[
+  {
+    "average_age": 12.33,
+    "room_id": 661,
+    "room_name": "Room #661"
+  },
+  {
+    "average_age": 20.33,
+    "room_id": 913,
+    "room_name": "Room #913"
+  },
+  {
+    "average_age": 32.1,
+    "room_id": 111,
+    "room_name": "Room #111"
+  },
+  {
+    "average_age": 33.67,
+    "room_id": 957,
+    "room_name": "Room #957"
+  },
+  {
+    "average_age": 35.36,
+    "room_id": 773,
+    "room_name": "Room #773"
+  }
+]
