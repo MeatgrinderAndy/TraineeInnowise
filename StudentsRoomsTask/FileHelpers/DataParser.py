@@ -3,6 +3,8 @@ import xml.etree.ElementTree as ET
 from xml.dom import minidom
 from pathlib import Path
 from decimal import Decimal
+import logging
+logger = logging.getLogger(__name__)
 
 class DataParser:
     @staticmethod
@@ -42,19 +44,21 @@ class DataParser:
         )
 
     @classmethod
-    def dataDictParser(cls, data, format, filePath):
+    def dataDictParser(cls, data:dict, format, filePath):
         outputData = None
         try:
             if format == 'xml':
                 outputData = cls.xmlParse(data, 'QueryRows') 
             elif format == 'json':
                 outputData = cls.jsonParse(data)
-            
+            else:
+                raise Exception(f'Format {format} is not supported!')
+
             file_path = Path(filePath + '.' + format)
             file_path.parent.mkdir(parents=True, exist_ok=True)
             
             with open(file_path, 'w', encoding='utf-8') as file:
                 file.write(outputData)
         except Exception as e:
-            print('Error while parsing data: ', e)
+            logger.error(f'Error while parsing data: {e}')
         

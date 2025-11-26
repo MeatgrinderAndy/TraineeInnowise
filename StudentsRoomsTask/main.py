@@ -1,29 +1,23 @@
 import sys
+import logging
 from Data.DBConnectionManager import DBConnectionManager
-from Data.DBSchemaManager import DBSchemaManager
+from Data.DBSchemaManager.DBSchemaManager import DBSchemaManager
 from Data.DBLoader import DBLoader
-from Data.DBAnalytics import DBAnalytics
+from Data.DBAnalytics.DBAnalytics import DBAnalytics
 from FileHelpers.DataReader import DataReader
 from FileHelpers.DataParser import DataParser
-
-DEFAULT_ROOMS_FILES = '.\\Files\\json\\rooms.json'
-DEFAULT_STUDENTS_FILES = '.\\Files\\json\\students.json'
-DEFAULT_OUTPUT_FORMAT = 'json'
-
-AMOUNT_OF_STUDENTS_FILE = '.\\Files\\output\\amount_of_students'
-LARGEST_AGE_DIFFERENCE_FILE = '.\\Files\\output\\largest_age_difference'
-SMALLEST_AVG_AGE_FILE = '.\\Files\\output\\smalles_avg_age'
-MIXED_GENDER_ROOMS_FILE = '.\\Files\\output\\mixed_gender_rooms'
-
+logger = logging.getLogger(__name__)
 
 try:
-    roomsFile = DEFAULT_ROOMS_FILES
-    studentsFile = DEFAULT_STUDENTS_FILES
-    outputFormat = DEFAULT_OUTPUT_FORMAT
+    config = DataReader.readConfig()
+    logging.basicConfig(filename='app.log', level=logging.INFO)
+
+    roomsFile = config['DEFAULT_PATHS']['DEFAULT_ROOMS_FILES']
+    studentsFile = config['DEFAULT_PATHS']['DEFAULT_STUDENTS_FILES']
+    outputFormat = config['DEFAULT_PATHS']['DEFAULT_OUTPUT_FORMAT']
     argvNum = len(sys.argv)
 
     if argvNum > 1:
-        
         roomsFile = sys.argv[1]
     if argvNum > 2:
         studentsFile = sys.argv[2]
@@ -51,12 +45,12 @@ try:
     roomsWithSmallestAverageAge = analytics.getRoomsWithSmallesAverageAge()
     mixedGenderRooms = analytics.getMixedGenderRooms()
 
-    DataParser.dataDictParser(amountOfStudentsInRooms, outputFormat, AMOUNT_OF_STUDENTS_FILE)
-    DataParser.dataDictParser(roomsWithLargestAgeDifference, outputFormat, LARGEST_AGE_DIFFERENCE_FILE)
-    DataParser.dataDictParser(roomsWithSmallestAverageAge, outputFormat, SMALLEST_AVG_AGE_FILE)
-    DataParser.dataDictParser(mixedGenderRooms, outputFormat, MIXED_GENDER_ROOMS_FILE)
+    DataParser.dataDictParser(amountOfStudentsInRooms, outputFormat, config['OUTPUT_PATHS']['AMOUNT_OF_STUDENTS_FILE'])
+    DataParser.dataDictParser(roomsWithLargestAgeDifference, outputFormat, config['OUTPUT_PATHS']['LARGEST_AGE_DIFFERENCE_FILE'])
+    DataParser.dataDictParser(roomsWithSmallestAverageAge, outputFormat, config['OUTPUT_PATHS']['SMALLEST_AVG_AGE_FILE'])
+    DataParser.dataDictParser(mixedGenderRooms, outputFormat, config['OUTPUT_PATHS']['MIXED_GENDER_ROOMS_FILE'])
 
 except Exception as e:
-    print('Error: ', e)
+    logger.error(f'Error: {e}')
 finally:
     connectionManager.close()

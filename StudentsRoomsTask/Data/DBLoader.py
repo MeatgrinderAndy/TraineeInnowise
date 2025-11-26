@@ -1,5 +1,8 @@
+import logging
+logger = logging.getLogger(__name__)
+
 class DBLoader:
-    def __init__(self, cursor, rooms, students):
+    def __init__(self, cursor, rooms:list, students:list):
         self.cursor = cursor
         self.rooms = rooms
         self.students = students
@@ -12,6 +15,6 @@ class DBLoader:
             insert_students_query = "INSERT INTO students (birthday, id, name, room_id, sex) VALUES (%s, %s, %s, %s, %s) ON CONFLICT (id) DO NOTHING;"
             self.cursor.executemany(insert_students_query, [(student['birthday'], student['id'], student['name'], student['room'], student['sex']) for student in self.students])
             
-            print('Data inserted!')
+            logger.info('Data inserted!')
         except Exception as e:
-            print('Couldn\'t insert data! Error: ', e)
+            logger.error(f'Couldn\'t insert data! Error: {e}')

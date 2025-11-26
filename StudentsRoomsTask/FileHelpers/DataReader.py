@@ -1,5 +1,6 @@
 import os
 import json
+from configparser import ConfigParser
 
 class DataReader:
     @staticmethod
@@ -16,3 +17,10 @@ class DataReader:
             with open(filePath, 'r') as file:
                 json_data = json.load(file) 
                 return json_data
+            
+    
+    @classmethod
+    def readConfig(cls, configPath='./.config'):
+        config = ConfigParser()
+        config.read(configPath)
+        return config
