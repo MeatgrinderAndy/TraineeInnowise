@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 class DataParser:
     @staticmethod
-    def xmlParse(dictionary, rootTag='root'):
+    def xmlParse(dictionary:dict, rootTag:str='root'):
         def _to_xml(element, data):
             if isinstance(data, dict):
                 for key, value in data.items():
@@ -30,7 +30,7 @@ class DataParser:
 
 
     @staticmethod
-    def jsonParse(dictionary, indent=2, ensure_ascii=False):
+    def jsonParse(dictionary:dict, indent:int=2, ensure_ascii:bool=False):
         def decimal_default(obj):
             if isinstance(obj, Decimal):
                 return float(obj) 
@@ -44,7 +44,7 @@ class DataParser:
         )
 
     @classmethod
-    def dataDictParser(cls, data:dict, format, filePath):
+    def dataDictParser(cls, data:dict, format:str, filePath:str):
         outputData = None
         try:
             if format == 'xml':

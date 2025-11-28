@@ -1,9 +1,10 @@
 from FileHelpers.DataReader import DataReader
 import logging
+from psycopg2.extensions import cursor
 logger = logging.getLogger(__name__)
 
 class DBAnalytics:
-    def __init__(self, cursor):
+    def __init__(self, cursor:cursor):
         self.cursor = cursor
         self.queriesConfig = DataReader.readConfig('.\\Data\\DBAnalytics\\queries.config')
 
