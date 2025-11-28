@@ -1,0 +1,6 @@
+Files/
+Files/input
+Files/output
+.env
+*.log
+__pycache__
