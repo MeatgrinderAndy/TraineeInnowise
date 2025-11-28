@@ -1,9 +1,10 @@
 from FileHelpers.DataReader import DataReader
 import logging
+from psycopg2.extensions import connection, cursor
 logger = logging.getLogger()
 
 class DBSchemaManager:
-    def __init__(self, connection, cursor):
+    def __init__(self, connection:connection, cursor:cursor):
         self.connection = connection
         self.cursor = cursor
         self.config = DataReader.readConfig('.\\Data\\DBSchemaManager\\queries.config')

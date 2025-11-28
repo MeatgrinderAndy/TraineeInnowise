@@ -1,8 +1,9 @@
 import logging
+from psycopg2.extensions import cursor
 logger = logging.getLogger(__name__)
 
 class DBLoader:
-    def __init__(self, cursor, rooms:list, students:list):
+    def __init__(self, cursor:cursor, rooms:list, students:list):
         self.cursor = cursor
         self.rooms = rooms
         self.students = students
