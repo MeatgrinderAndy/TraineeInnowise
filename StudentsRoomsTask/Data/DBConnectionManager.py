@@ -1,5 +1,8 @@
 import psycopg2
 import os
+import logging
+from dotenv import load_dotenv
+logger = logging.getLogger(__name__)
 
 class DBConnectionManager():         
 
@@ -10,43 +13,44 @@ class DBConnectionManager():
     def connect(self):
         try:
             if self.connection is None:
+                load_dotenv()
                 self.connection = psycopg2.connect(
-                    host="localhost",   
-                    database="postgres",
-                    user="postgres",
-                    password="12345",
-                    port="5433"
+                    host=os.getenv('DB_HOST'),   
+                    database=os.getenv('DB_NAME'),
+                    user=os.getenv('DB_USER'),
+                    password=os.getenv('DB_PASSWORD'),
+                    port=os.getenv('DB_PORT')
                 )
-                print('Connected succesfully!')
+                logger.info('Connected succesfully!')
             else:
-                print('Connection exists!')
+                logger.info('Connection exists!')
         except Exception as e:
-            print('Failed connecting! Error: ', e)
+            logger.error(f'Failed connecting! Error: {e}')
 
     def createCursor(self):
         try:
             if self.connection is None:
                 self.connect()
             self.cursor = self.connection.cursor()
-            print('Cursor was created!')
+            logger.info('Cursor was created!')
         except Exception as e:
-            print('Failed creating cursor!')
+            logger.error(f'Failed creating cursor! Error: {e}')
     
     def close(self):
         try:
             if self.cursor is not None:
                 self.cursor.close() 
                 self.cursor = None
-                print('Cursor was closed!')
+                logger.info('Cursor was closed!')
             
             if self.connection is not None:
                 self.connection.close()
                 self.connection = None
-                print('Connection was closed!')
+                logger.info('Connection was closed!')
             else:
-                print('No active connections')
+                logger.info('No active connections')
         except Exception as e:
-            print('Failed to close connection! Error: ')
+            logger.error(f'Failed to close connection! Error: {e}')
 
     
 
