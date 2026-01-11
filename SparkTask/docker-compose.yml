@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  spark-master:
+    image: apache/spark:3.5.0
+    container_name: spark-master
+    command: /opt/spark/bin/spark-class org.apache.spark.deploy.master.Master
+    ports:
+      - '${SPARK_WEBUI_PORT}:8080'
+      - '${SPARK_MASTER_PORT}:7077'
+    volumes:
+      - ./:/app
+    networks:
+      - database-network 
+    env_file:
+      - .env
+
+  spark-worker:
+    image: apache/spark:3.5.0
+    container_name: spark-worker
+    command: /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
+    volumes:
+      - ./:/app
+    depends_on:
+      - spark-master
+    networks:
+      - database-network 
+    env_file:
+      - .env
+
+networks:
+  database-network:
+    external: true
+    name: ${NETWORK_NAME}
