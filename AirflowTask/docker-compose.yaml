@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: ${MONGO_CONTAINER_NAME}
+    ports:
+      - "${MONGO_HOST_PORT}:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  airflow:
+    build: .
+    container_name: airflow_standalone
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=${AIRFLOW_EXECUTOR}
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=${AIRFLOW_DB_CONN}
+      - AIRFLOW__CORE__LOAD_EXAMPLES=${AIRFLOW_LOAD_EXAMPLES}
+      - AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=${AIRFLOW_DAGS_PAUSED}
+      - AIRFLOW_CONN_FS_DEFAULT=fs://
+      - AIRFLOW_CONN_MONGO_DEFAULT=mongodb://${MONGO_CONTAINER_NAME}:27017
+      - DATA_FOLDER=${AIRFLOW_DATA_FOLDER}
+      - INPUT_FILENAME=${AIRFLOW_INPUT_FILENAME}
+      - OUTPUT_FILENAME=${AIRFLOW_OUTPUT_FILENAME}
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./data:/opt/airflow/data
+      - ./logs:/opt/airflow/logs
+      - ./plugins:/opt/airflow/plugins
+    ports:
+      - "${AIRFLOW_WEB_PORT}:8080"
+    command: >
+      bash -c "airflow db migrate &&
+      airflow users create
+      --username ${AIRFLOW_ADMIN_USER}
+      --password ${AIRFLOW_ADMIN_PASSWORD}
+      --firstname ${AIRFLOW_ADMIN_FIRSTNAME}
+      --lastname ${AIRFLOW_ADMIN_LASTNAME}
+      --role Admin
+      --email ${AIRFLOW_ADMIN_EMAIL} &&
+      airflow webserver & airflow scheduler"
+    depends_on:
+      - mongo
+
+volumes:
+  mongo_data:

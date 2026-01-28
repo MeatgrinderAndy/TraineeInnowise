@@ -1,0 +1,57 @@
+db.comments.aggregate([
+    {
+        $group: {
+            _id: "$content",
+            count: { $sum: 1 }
+        }
+    },
+    { $sort: { count: -1 } },
+    { $limit: 5 }
+])
+
+
+db.comments.aggregate([
+    {
+        $addFields: {
+            safeContent: { $toString: "$content" }
+        }
+    },
+    {
+        $project: {
+            content: 1,
+            length: { $strLenCP: "$safeContent" }
+        }
+    },
+    {
+        $match: {
+            length: { $lt: 5 }
+        }
+    }
+])
+
+
+db.comments.aggregate([
+    {
+        $addFields: {
+            dateObj: { $toDate: "$at" },
+            ratingNum: { $toDouble: "$score" }
+        }
+    },
+    {
+        $group: {
+            _id: { $dateToString: { format: "%Y-%m-%d", date: "$dateObj" } },
+            averageRating: { $avg: "$ratingNum" }
+        }
+    },
+    {
+        $project: {
+            _id: 0,
+            date: "$_id",
+            averageRating: 1,
+            timestamp: { $toLong: { $toDate: "$_id" } }
+        }
+    },
+    { $sort: { timestamp: 1 } }
+])
+
+
